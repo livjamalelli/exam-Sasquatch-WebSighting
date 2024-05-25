@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sasquatch Sighting View Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}">
+</head>
+<body>
+    <div class="container d-flex flex-column justify-content-between">
+        <div class="d-flex justify-content-between align-items-top">
+            <h1> Sasquatch Sighting </h1>
+            <div>
+                <h2>{{user['first_name']}} {{user['last_name']}}</h2>
+                <a href="/dashboard"><button class="btn btn-primary p-2">Home</button></a>
+                <a href="/sighting/new"><button class="btn btn-primary p-2"> Create</button></a>
+                <a href="/account/logout"><button class="btn btn-danger p-2">Logout</button></a>
+            </div>
+        </div>
+
+        <div class= 'd-flex'>
+            <div>
+                <h1>{{sighting['location']}}</h1>
+                <div>
+                    <table>
+                        <tr>
+                            <td>
+                                What they were doing:
+                            </td>
+                            <td>
+                                {{sighting['happening']}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                # of Sasquatches
+                            </td>
+                            <td>
+                                {%if sighting['sasquatch_count'] == 6%} 5+ {%else%}{{sighting['sasquatch_count']}}{%endif%}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Date Seen On:
+                            </td>
+                            <td>
+                                {{sighting['sighting_at']}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Sighted by: 
+                            </td>
+                            <td>
+                                {{sighting['creator']}}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div>
+
+                <div>
+                    <ul>
+                        {%for skeptic in skeptics['users']%}
+                        <li>{{skeptic.getFullName()}}</li>
+                        {%endfor%}
+                    </ul>
+                </div>
+                {%if userSkeptic%}
+                <form action="/skeptic/delete" method="post">
+                    <input hidden name ="user_id" value="{{session['uuid']}}">
+                    <input hidden name ="sighting_id" value="{{sighting['id']}}">
+                    <button>Believe it</button>
+                </form>
+                {%else%}
+                <form action="/skeptic/create" method="post">
+                    <input hidden name ="user_id" value="{{session['uuid']}}">
+                    <input hidden name ="sighting_id" value="{{sighting['id']}}">
+                    <button>I am Skeptical</button>
+                </form>
+                {%endif%}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
